@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>مذكّرة البيت</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#175E54">
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --teal:#175E54; --teal-dark:#0E423B;
+    --mustard:#D9A421; --brick:#B5442E;
+    --sand:#F2ECDD; --card:#FFFFFF;
+    --ink:#22302C; --muted:#6E7B76; --line:#E3DCC9;
+    --radius:14px;
+    --c-weekly:#175E54; --c-weekly-bg:#E1F0EC;
+    --c-biweekly:#D9A421; --c-biweekly-bg:#FBF0D3;
+    --c-monthly:#B5442E; --c-monthly-bg:#F7E3DE;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--sand);color:var(--ink);min-height:100vh}
+  header{background:var(--teal);color:#fff;padding:calc(env(safe-area-inset-top,0px) + 22px) 18px 16px;position:relative}
+  .najdi-band{display:block;width:100%;height:16px}
+  header h1{font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:800;font-size:1.55rem;line-height:1.2}
+  header p{font-size:.82rem;opacity:.85;margin-top:2px}
+  .due-pill{position:absolute;left:18px;bottom:14px;background:var(--mustard);color:var(--teal-dark);
+    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:800;font-size:.9rem;padding:6px 13px;
+    border-radius:999px;box-shadow:0 2px 0 rgba(0,0,0,.15)}
+  .due-pill.ok{background:#CBE6DF;color:var(--teal-dark)}
+  .btn-settings{position:absolute;left:18px;top:calc(env(safe-area-inset-top,0px) + 20px);background:rgba(255,255,255,.15);
+    border:none;color:#fff;font-size:1.1rem;width:36px;height:36px;border-radius:10px;cursor:pointer}
+
+  .alert-banner{display:none;background:var(--brick);color:#fff;padding:12px 18px;font-size:.92rem;font-weight:500;text-align:center}
+  .alert-banner.show{display:block}
+  .alert-banner b{font-family:'Baloo Bhaijaan 2',sans-serif}
+
+  .notif-bar{display:none;background:#FBF0D3;border-bottom:1px solid var(--line);padding:10px 18px;
+    font-size:.85rem;color:#7A5A0B;text-align:center}
+  .notif-bar.show{display:block}
+  .notif-bar button{background:var(--mustard);border:none;border-radius:8px;padding:6px 14px;
+    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:700;color:var(--teal-dark);cursor:pointer;margin-inline-start:8px}
+
+  .month-bar{max-width:640px;margin:14px auto 0;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .month-bar button{background:var(--card);border:1.5px solid var(--line);border-radius:10px;width:42px;height:42px;font-size:1.2rem;cursor:pointer;color:var(--teal-dark)}
+  .month-bar button:disabled{opacity:.35;cursor:default}
+  .month-title{font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:800;font-size:1.2rem;color:var(--teal-dark);text-align:center;flex:1}
+  .month-title small{display:block;font-family:'IBM Plex Sans Arabic',sans-serif;font-weight:400;font-size:.72rem;color:var(--muted)}
+
+  main{max-width:640px;margin:0 auto;padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 90px)}
+
+  .add-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;
+    display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;box-shadow:0 1px 3px rgba(34,48,44,.06)}
+  .add-box input[type=text]{flex:1 1 150px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:.95rem}
+  .add-box select{flex:0 0 auto;border:1.5px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:.9rem;background:#fff}
+  .add-box input:focus,.add-box select:focus{outline:2px solid var(--mustard);outline-offset:1px;border-color:var(--mustard)}
+  .btn-add{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:10px 20px;
+    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:700;font-size:1rem;cursor:pointer}
+  .btn-add:hover{background:var(--teal-dark)}
+
+  .section-title{font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:800;font-size:1.1rem;margin:22px 0 10px;
+    display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;color:#fff}
+  .st-due{background:var(--brick)}
+  .st-weekly{background:var(--c-weekly)}
+  .st-biweekly{background:var(--c-biweekly);color:var(--teal-dark)}
+  .st-monthly{background:var(--c-monthly)}
+  .st-log{background:var(--teal-dark)}
+  .section-title .count{margin-inline-start:auto;background:rgba(255,255,255,.25);border-radius:999px;padding:1px 10px;font-size:.85rem}
+
+  .items{display:flex;flex-direction:column;gap:10px}
+  .item{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;
+    display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(34,48,44,.05);border-inline-start:6px solid var(--line)}
+  .item.f-weekly{border-inline-start-color:var(--c-weekly);background:linear-gradient(to left,#fff 85%,var(--c-weekly-bg))}
+  .item.f-biweekly{border-inline-start-color:var(--c-biweekly);background:linear-gradient(to left,#fff 85%,var(--c-biweekly-bg))}
+  .item.f-monthly{border-inline-start-color:var(--c-monthly);background:linear-gradient(to left,#fff 85%,var(--c-monthly-bg))}
+  .item.due{border:2px solid var(--brick);border-inline-start-width:6px;background:#FDF4F1;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(181,68,46,.25)}50%{box-shadow:0 0 0 6px rgba(181,68,46,0)}}
+  .item-info{flex:1;min-width:0}
+  .item-name{font-weight:700;font-size:1rem}
+  .item-meta{font-size:.78rem;color:var(--muted);margin-top:2px}
+  .item.due .item-meta{color:var(--brick);font-weight:600}
+  .freq-tag{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-inline-start:6px;vertical-align:middle}
+  .t-weekly{background:var(--c-weekly);color:#fff}
+  .t-biweekly{background:var(--c-biweekly);color:var(--teal-dark)}
+  .t-monthly{background:var(--c-monthly);color:#fff}
+
+  .btn-done{background:var(--mustard);color:var(--teal-dark);border:none;border-radius:10px;padding:9px 15px;
+    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:800;font-size:.92rem;cursor:pointer}
+  .btn-del{background:none;border:none;color:var(--muted);font-size:1.05rem;cursor:pointer;padding:6px;border-radius:8px}
+  .btn-del:hover{color:var(--brick);background:#F3E4E0}
+
+  .log-item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 14px;
+    display:flex;justify-content:space-between;gap:10px;font-size:.88rem}
+  .log-item .when{color:var(--muted);font-size:.78rem;flex:none}
+
+  .empty{text-align:center;color:var(--muted);font-size:.9rem;padding:14px;background:#EFE8D6;border-radius:var(--radius)}
+  .loading{text-align:center;color:var(--muted);padding:40px 0}
+  .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);right:50%;transform:translateX(50%);
+    background:var(--teal-dark);color:#fff;padding:10px 22px;border-radius:999px;font-size:.9rem;
+    opacity:0;pointer-events:none;transition:opacity .3s;z-index:10;white-space:nowrap}
+  .toast.show{opacity:1}
+
+  /* شاشة الدخول / الإعدادات */
+  .gate{max-width:420px;margin:40px auto;padding:0 20px;text-align:center}
+  .gate h2{font-family:'Baloo Bhaijaan 2',sans-serif;color:var(--teal-dark);margin-bottom:8px}
+  .gate p{color:var(--muted);font-size:.9rem;margin-bottom:18px;line-height:1.7}
+  .gate .card-g{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
+  .gate button{width:100%;background:var(--teal);color:#fff;border:none;border-radius:10px;padding:12px;
+    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;margin-top:8px}
+  .gate button.alt{background:var(--mustard);color:var(--teal-dark)}
+  .gate input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px;font:inherit;text-align:center;letter-spacing:1px}
+  .code-box{font-family:monospace;font-size:1rem;background:#EFE8D6;border-radius:10px;padding:10px;
+    word-break:break-all;user-select:all;margin:8px 0}
+  dialog{border:none;border-radius:var(--radius);padding:22px;max-width:380px;width:90%;font-family:inherit}
+  dialog::backdrop{background:rgba(14,66,59,.5)}
+  dialog h3{font-family:'Baloo Bhaijaan 2',sans-serif;color:var(--teal-dark);margin-bottom:10px}
+  dialog p{font-size:.85rem;color:var(--muted);line-height:1.7;margin-bottom:8px}
+  dialog button{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:10px 18px;
+    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:700;cursor:pointer;margin-top:8px}
+  dialog button.danger{background:var(--brick)}
+  dialog button.plain{background:#EFE8D6;color:var(--ink)}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>مذكّرة البيت 🏠</h1>
+  <p>احتياجاتنا المشتركة — لا شيء ينتسي</p>
+  <button class="btn-settings" id="btnSettings" aria-label="الإعدادات" style="display:none">⚙</button>
+  <div class="due-pill" id="duePill" style="display:none">…</div>
+</header>
+<svg class="najdi-band" viewBox="0 0 400 16" preserveAspectRatio="none" aria-hidden="true">
+  <rect width="400" height="16" fill="#0E423B"/><g id="triBand"></g>
+</svg>
+
+<div class="alert-banner" id="alertBanner"></div>
+<div class="notif-bar" id="notifBar">🔔 عشان توصلك التنبيهات على الجوال
+  <button id="btnEnableNotif">فعّل الإشعارات</button>
+</div>
+
+<!-- شاشة الربط الأولى -->
+<div class="gate" id="gate" style="display:none">
+  <h2>أهلاً بكم 👋</h2>
+  <p>هذي مذكّرة مشتركة بينك وبين زوجتك.<br>أول شخص منكم يسوي «بيت جديد»، والثاني يدخل برمز البيت نفسه.</p>
+  <div class="card-g">
+    <button id="btnNewHouse">🏠 إنشاء بيت جديد</button>
+  </div>
+  <div class="card-g">
+    <input type="text" id="joinCode" placeholder="الصق رمز البيت هنا">
+    <button class="alt" id="btnJoin">الانضمام لبيت موجود</button>
+  </div>
+</div>
+
+<div class="month-bar" id="monthBar" style="display:none">
+  <button id="prevM" aria-label="الشهر السابق">‹</button>
+  <div class="month-title" id="monthTitle"></div>
+  <button id="nextM" aria-label="الشهر التالي">›</button>
+</div>
+
+<main>
+  <div id="addWrap" style="display:none">
+    <div class="add-box" role="group" aria-label="إضافة احتياج جديد">
+      <input type="text" id="newName" placeholder="مثال: وايت موية، رز، حليب…" aria-label="اسم الاحتياج">
+      <select id="newFreq" aria-label="التكرار">
+        <option value="weekly">أسبوعي</option>
+        <option value="biweekly">كل أسبوعين</option>
+        <option value="monthly">شهري</option>
+      </select>
+      <button class="btn-add" id="btnAdd">أضِف</button>
+    </div>
+  </div>
+  <div id="content"><div class="loading">جارٍ التحميل…</div></div>
+</main>
+
+<dialog id="dlgSettings">
+  <h3>الإعدادات</h3>
+  <p>رمز بيتكم — أرسله لزوجتك عشان تنضم بنفس القائمة:</p>
+  <div class="code-box" id="myCode"></div>
+  <button id="btnCopyCode">نسخ الرمز</button>
+  <button class="plain" id="btnCloseSettings">إغلاق</button>
+  <hr style="margin:14px 0;border:none;border-top:1px solid #E3DCC9">
+  <button class="danger" id="btnLeave">الخروج من هذا البيت</button>
+</dialog>
+
+<div class="toast" id="toast"></div>
+
+<!-- ═══════════════════════════════════════════════
+     ١) إعدادات Firebase — الصق إعداداتك هنا 👇
+     (من Firebase Console > Project settings > Your apps)
+════════════════════════════════════════════════ -->
+<script>
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAJqa14Usg3x2FuHWMCa3wWjMUO39hdPt4",
+  authDomain: "bayt-app-c09e5.firebaseapp.com",
+  projectId: "bayt-app-c09e5",
+  storageBucket: "bayt-app-c09e5.firebasestorage.app",
+  messagingSenderId: "840060946723",
+  appId: "1:840060946723:web:f8234d7ff6dcbed25a6496"
+};
+/* ٢) مفتاح الإشعارات العام (VAPID Public Key) — جاهز، لا تغيّره إلا إذا ولّدت مفاتيح جديدة */
+const VAPID_PUBLIC_KEY = "BB5cxv-GNGc8S_hnO-HUabCJlIkzC6DHElKIJM8fEpemRjSZY5C8v7f2UBZSe5FBCxk05_zbogOS0xJaPOBIY-s";
+</script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const app = initializeApp(FIREBASE_CONFIG);
+const db  = getFirestore(app);
+
+const FREQ = {
+  weekly:   {label:'أسبوعي',      days:7,  tag:'t-weekly',   cls:'f-weekly',   st:'st-weekly'},
+  biweekly: {label:'كل أسبوعين', days:14, tag:'t-biweekly', cls:'f-biweekly', st:'st-biweekly'},
+  monthly:  {label:'شهري',        days:30, tag:'t-monthly',  cls:'f-monthly',  st:'st-monthly'},
+};
+const MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+let data = {items:[], log:[]};
+let houseId = null;
+const now = new Date();
+let viewY = now.getFullYear(), viewM = now.getMonth();
+let unsub = null;
+
+/* نقشة المثلثات */
+(function(){
+  const colors = ['#D9A421','#B5442E','#F2ECDD'];
+  let g = '';
+  for(let x=0;x<400;x+=20)
+    g += '<path d="M'+x+' 16 L'+(x+10)+' 2 L'+(x+20)+' 16 Z" fill="'+colors[(x/20)%3]+'"/>';
+  document.getElementById('triBand').innerHTML = g;
+})();
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2400);
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function store(k,v){ try{ localStorage.setItem(k,v);}catch(e){} }
+function read(k){ try{ return localStorage.getItem(k);}catch(e){ return null; } }
+
+/* ── الربط بالبيت ── */
+function randomCode(){
+  const chars='abcdefghjkmnpqrstuvwxyz23456789';
+  let s=''; const a=new Uint8Array(24); crypto.getRandomValues(a);
+  for(const b of a) s+=chars[b%chars.length];
+  return s;
+}
+async function startApp(){
+  houseId = read('houseId');
+  if(!houseId){ showGate(); return; }
+  showApp();
+  listen();
+}
+function showGate(){
+  document.getElementById('gate').style.display='';
+  document.getElementById('content').innerHTML='';
+}
+function showApp(){
+  document.getElementById('gate').style.display='none';
+  document.getElementById('monthBar').style.display='';
+  document.getElementById('btnSettings').style.display='';
+  document.getElementById('duePill').style.display='';
+  maybeShowNotifBar();
+}
+document.getElementById('btnNewHouse').onclick = async ()=>{
+  houseId = randomCode();
+  store('houseId', houseId);
+  await setDoc(doc(db,'houses',houseId), {items:[],log:[],created:Date.now()});
+  showApp(); listen();
+  toast('تم إنشاء بيتكم 🏠 — شارك الرمز من ⚙');
+};
+document.getElementById('btnJoin').onclick = async ()=>{
+  const code = document.getElementById('joinCode').value.trim();
+  if(code.length < 20){ toast('الرمز غير صحيح'); return; }
+  const snap = await getDoc(doc(db,'houses',code));
+  if(!snap.exists()){ toast('ما لقينا بيت بهذا الرمز'); return; }
+  houseId = code; store('houseId', houseId);
+  showApp(); listen();
+  toast('انضممت للبيت ✓');
+};
+
+/* ── مزامنة لحظية ── */
+function listen(){
+  if(unsub) unsub();
+  unsub = onSnapshot(doc(db,'houses',houseId), snap=>{
+    if(snap.exists()){
+      const d = snap.data();
+      data = {items: d.items||[], log: d.log||[]};
+    }
+    render();
+  }, err=>{
+    document.getElementById('content').innerHTML =
+      '<div class="empty">تعذّر الاتصال — تأكد من الإنترنت ومن إعدادات Firebase</div>';
+  });
+}
+async function save(){
+  try{ await setDoc(doc(db,'houses',houseId), {items:data.items, log:data.log}, {merge:true}); }
+  catch(e){ toast('تعذّر الحفظ، جرّب مرة ثانية'); }
+}
+
+/* ── منطق الاستحقاق ── */
+function daysLeft(item){
+  if(!item.lastDone) return -1;
+  return Math.ceil(FREQ[item.freq].days - (Date.now()-item.lastDone)/86400000);
+}
+function isDue(item){ return daysLeft(item) <= 0; }
+function fmtMeta(item){
+  const d = daysLeft(item);
+  if(!item.lastDone) return 'جديد — يحتاج أول مرة';
+  if(d <= 0) return 'حان موعده! ⏰';
+  if(d === 1) return 'باقي يوم واحد';
+  if(d === 2) return 'باقي يومين';
+  return 'باقي '+d+' أيام';
+}
+function isCurrentMonth(){ return viewY===now.getFullYear() && viewM===now.getMonth(); }
+
+function itemHTML(item){
+  const f = FREQ[item.freq];
+  return '<div class="item '+f.cls+(isDue(item)?' due':'')+'">' +
+    '<div class="item-info"><div class="item-name">'+esc(item.name)+
+    '<span class="freq-tag '+f.tag+'">'+f.label+'</span></div>' +
+    '<div class="item-meta">'+fmtMeta(item)+'</div></div>' +
+    '<button class="btn-done" data-done="'+item.id+'">تم ✓</button>' +
+    '<button class="btn-del" data-del="'+item.id+'" aria-label="حذف">✕</button></div>';
+}
+
+function render(){
+  if(!houseId) return;
+  document.getElementById('monthTitle').innerHTML =
+    MONTHS[viewM]+' '+viewY+'<small>'+(isCurrentMonth()?'الشهر الحالي':'سجل شهر سابق')+'</small>';
+  document.getElementById('nextM').disabled = isCurrentMonth();
+
+  const box = document.getElementById('content');
+  const due = data.items.filter(isDue);
+
+  const pill = document.getElementById('duePill');
+  if(due.length){ pill.textContent = due.length+' مستحق'; pill.classList.remove('ok'); }
+  else{ pill.textContent = 'كله تمام ✓'; pill.classList.add('ok'); }
+
+  const banner = document.getElementById('alertBanner');
+  if(due.length){
+    banner.innerHTML = '🔔 <b>تنبيه:</b> عندكم '+due.length+' من الاحتياجات حان موعدها: '+
+      due.map(i=>'«'+esc(i.name)+'»').join('، ');
+    banner.classList.add('show');
+  } else banner.classList.remove('show');
+
+  document.title = due.length ? '('+due.length+') مذكّرة البيت' : 'مذكّرة البيت';
+  document.getElementById('addWrap').style.display = isCurrentMonth() ? '' : 'none';
+
+  let html = '';
+  if(isCurrentMonth()){
+    if(!data.items.length){
+      html += '<div class="empty">القائمة فاضية — ابدأوا بإضافة أول احتياج فوق ⬆ (جرّب: وايت موية)</div>';
+    }else{
+      if(due.length){
+        html += '<div class="section-title st-due">⏰ يحتاج انتباهكم الآن<span class="count">'+due.length+'</span></div>';
+        html += '<div class="items">'+due.map(itemHTML).join('')+'</div>';
+      }
+      for(const key of ['weekly','biweekly','monthly']){
+        const group = data.items.filter(i=>i.freq===key && !isDue(i));
+        if(!group.length) continue;
+        group.sort((a,b)=>daysLeft(a)-daysLeft(b));
+        html += '<div class="section-title '+FREQ[key].st+'">'+FREQ[key].label+'<span class="count">'+group.length+'</span></div>';
+        html += '<div class="items">'+group.map(itemHTML).join('')+'</div>';
+      }
+    }
+  }
+
+  const monthLog = data.log.filter(e=>{
+    const d = new Date(e.ts);
+    return d.getFullYear()===viewY && d.getMonth()===viewM;
+  }).sort((a,b)=>b.ts-a.ts);
+
+  html += '<div class="section-title st-log">📋 سجل '+MONTHS[viewM]+'<span class="count">'+monthLog.length+'</span></div>';
+  if(monthLog.length){
+    html += '<div class="items">'+monthLog.map(e=>{
+      const d = new Date(e.ts);
+      return '<div class="log-item"><span>✓ '+esc(e.name)+'</span>'+
+        '<span class="when">'+d.getDate()+' '+MONTHS[d.getMonth()]+'</span></div>';
+    }).join('')+'</div>';
+  }else{
+    html += '<div class="empty">ما فيه شيء مسجّل في هذا الشهر'+(isCurrentMonth()?' بعد':'')+'</div>';
+  }
+
+  box.innerHTML = html;
+  box.querySelectorAll('[data-done]').forEach(b=>b.onclick=()=>markDone(b.dataset.done));
+  box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>del(b.dataset.del));
+}
+
+async function addItem(){
+  const nameEl = document.getElementById('newName');
+  const name = nameEl.value.trim();
+  if(!name){ nameEl.focus(); return; }
+  data.items.push({id:'i'+Date.now()+Math.floor(Math.random()*999), name,
+    freq:document.getElementById('newFreq').value, lastDone:null});
+  nameEl.value='';
+  render(); await save();
+  toast('انضاف «'+name+'» للقائمة');
+}
+async function markDone(id){
+  const it = data.items.find(i=>i.id===id);
+  if(!it) return;
+  it.lastDone = Date.now();
+  data.log.push({itemId:id, name:it.name, ts:Date.now()});
+  render(); await save();
+  toast('تم ✓ — التذكير الجاي بعد '+FREQ[it.freq].days+' يوم');
+}
+async function del(id){
+  const it = data.items.find(i=>i.id===id);
+  if(!it) return;
+  if(!confirm('حذف «'+it.name+'» نهائياً من القائمة؟')) return;
+  data.items = data.items.filter(i=>i.id!==id);
+  render(); await save();
+}
+
+document.getElementById('btnAdd').onclick = addItem;
+document.getElementById('newName').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
+document.getElementById('prevM').onclick = ()=>{ viewM--; if(viewM<0){viewM=11;viewY--;} render(); };
+document.getElementById('nextM').onclick = ()=>{ if(isCurrentMonth())return; viewM++; if(viewM>11){viewM=0;viewY++;} render(); };
+
+/* ── الإعدادات ── */
+const dlg = document.getElementById('dlgSettings');
+document.getElementById('btnSettings').onclick = ()=>{
+  document.getElementById('myCode').textContent = houseId;
+  dlg.showModal();
+};
+document.getElementById('btnCloseSettings').onclick = ()=>dlg.close();
+document.getElementById('btnCopyCode').onclick = async ()=>{
+  try{ await navigator.clipboard.writeText(houseId); toast('انتسخ الرمز ✓'); }
+  catch(e){ toast('انسخه يدوياً بالضغط المطوّل'); }
+};
+document.getElementById('btnLeave').onclick = ()=>{
+  if(!confirm('الخروج من هذا البيت؟ (البيانات تبقى محفوظة، وتقدر ترجع بالرمز)')) return;
+  store('houseId',''); localStorage.removeItem('houseId');
+  location.reload();
+};
+
+/* ── الإشعارات (Web Push) ── */
+function urlB64ToUint8(base64String){
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/-/g,'+').replace(/_/g,'/');
+  const raw = atob(base64);
+  return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)));
+}
+function isStandalone(){
+  return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+}
+async function maybeShowNotifBar(){
+  const bar = document.getElementById('notifBar');
+  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+  if(read('pushDone')==='1') return;
+  if(!isStandalone()){
+    bar.innerHTML = '📲 عشان توصلك التنبيهات على الآيفون: افتح الموقع في سفاري ← زر المشاركة ← «إضافة إلى الشاشة الرئيسية» ← ثم افتح التطبيق من الأيقونة';
+    bar.classList.add('show');
+    return;
+  }
+  bar.classList.add('show');
+}
+document.getElementById('btnEnableNotif').onclick = async ()=>{
+  try{
+    const reg = await navigator.serviceWorker.ready;
+    const perm = await Notification.requestPermission();
+    if(perm !== 'granted'){ toast('لازم تسمح بالإشعارات من الإعدادات'); return; }
+    const sub = await reg.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlB64ToUint8(VAPID_PUBLIC_KEY)
+    });
+    await addDoc(collection(db,'houses',houseId,'subs'), JSON.parse(JSON.stringify(sub)));
+    store('pushDone','1');
+    document.getElementById('notifBar').classList.remove('show');
+    toast('تم تفعيل الإشعارات ✓ بيجيكم تذكير يومي بالمستحق');
+  }catch(e){
+    console.error(e);
+    toast('تعذّر التفعيل — تأكد أنك فاتح التطبيق من أيقونة الشاشة الرئيسية');
+  }
+};
+
+/* تسجيل service worker */
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js');
+}
+
+startApp();
+</script>
+</body>
+</html>

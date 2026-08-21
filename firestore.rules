@@ -1,0 +1,12 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // كل بيت له رمز طويل عشوائي — الوصول فقط لمن يعرف الرمز
+    match /houses/{houseId} {
+      allow read, write: if houseId.size() >= 20;
+      match /subs/{subId} {
+        allow read, write: if houseId.size() >= 20;
+      }
+    }
+  }
+}
