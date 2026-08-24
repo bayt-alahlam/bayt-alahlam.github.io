@@ -3,7 +3,7 @@ self.addEventListener('install', e => self.skipWaiting());
 self.addEventListener('activate', e => e.waitUntil(clients.claim()));
 
 self.addEventListener('push', event => {
-  let payload = { title: 'مذكّرة البيت 🏠', body: 'عندكم احتياجات حان موعدها' };
+  let payload = { title: 'فاتورة ٢٧٥ 🧾', body: 'عندكم مستحقات في الفاتورة' };
   try { payload = event.data.json(); } catch (e) {}
   event.waitUntil(
     self.registration.showNotification(payload.title, {

@@ -3,195 +3,280 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>مذكّرة البيت</title>
+<title>فاتورة ٢٧٥</title>
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#175E54">
-<link href="https://fonts.googleapis.com/css2?family=Baloo+Bhaijaan+2:wght@500;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#FFFFFF">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --teal:#175E54; --teal-dark:#0E423B;
-    --mustard:#D9A421; --brick:#B5442E;
-    --sand:#F2ECDD; --card:#FFFFFF;
-    --ink:#22302C; --muted:#6E7B76; --line:#E3DCC9;
-    --radius:14px;
-    --c-weekly:#175E54; --c-weekly-bg:#E1F0EC;
-    --c-biweekly:#D9A421; --c-biweekly-bg:#FBF0D3;
-    --c-monthly:#B5442E; --c-monthly-bg:#F7E3DE;
+    --bg:#EFEEE9;
+    --paper:#FFFFFF;
+    --ink:#1A1A1A;
+    --muted:#8A8A84;
+    --line:#ECEBE4;
+    --line-dark:#D8D7D0;
+    --accent:#2E7D5B;
+    --accent-soft:#EAF3EF;
+    --danger:#B3452F;
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--sand);color:var(--ink);min-height:100vh}
-  header{background:var(--teal);color:#fff;padding:calc(env(safe-area-inset-top,0px) + 22px) 18px 16px;position:relative}
-  .najdi-band{display:block;width:100%;height:16px}
-  header h1{font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:800;font-size:1.55rem;line-height:1.2}
-  header p{font-size:.82rem;opacity:.85;margin-top:2px}
-  .due-pill{position:absolute;left:18px;bottom:14px;background:var(--mustard);color:var(--teal-dark);
-    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:800;font-size:.9rem;padding:6px 13px;
-    border-radius:999px;box-shadow:0 2px 0 rgba(0,0,0,.15)}
-  .due-pill.ok{background:#CBE6DF;color:var(--teal-dark)}
-  .btn-settings{position:absolute;left:18px;top:calc(env(safe-area-inset-top,0px) + 20px);background:rgba(255,255,255,.15);
-    border:none;color:#fff;font-size:1.1rem;width:36px;height:36px;border-radius:10px;cursor:pointer}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  body{
+    font-family:'IBM Plex Sans Arabic',sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    min-height:100vh;
+    font-size:15px;
+  }
+  /* ── الهيدر ── */
+  header{
+    background:var(--paper);
+    border-bottom:1px solid var(--line-dark);
+    padding:calc(env(safe-area-inset-top,0px) + 18px) 20px 14px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  header h1{font-size:1.25rem;font-weight:700;letter-spacing:-.3px}
+  header h1 span{color:var(--accent)}
+  .btn-icon{
+    background:none;border:1px solid var(--line-dark);border-radius:8px;
+    width:34px;height:34px;font-size:1rem;cursor:pointer;color:var(--ink);
+  }
 
-  .alert-banner{display:none;background:var(--brick);color:#fff;padding:12px 18px;font-size:.92rem;font-weight:500;text-align:center}
-  .alert-banner.show{display:block}
-  .alert-banner b{font-family:'Baloo Bhaijaan 2',sans-serif}
+  /* ── شريط الشهر ── */
+  .month-bar{
+    max-width:560px;margin:0 auto;padding:14px 16px 0;
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+  }
+  .month-bar button{
+    background:none;border:none;font-size:1.3rem;color:var(--muted);
+    cursor:pointer;width:38px;height:38px;
+  }
+  .month-bar button:disabled{opacity:.25}
+  .month-title{font-weight:700;font-size:1.05rem;text-align:center}
+  .month-title small{display:block;font-weight:400;font-size:.7rem;color:var(--muted)}
 
-  .notif-bar{display:none;background:#FBF0D3;border-bottom:1px solid var(--line);padding:10px 18px;
-    font-size:.85rem;color:#7A5A0B;text-align:center}
-  .notif-bar.show{display:block}
-  .notif-bar button{background:var(--mustard);border:none;border-radius:8px;padding:6px 14px;
-    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:700;color:var(--teal-dark);cursor:pointer;margin-inline-start:8px}
+  main{max-width:560px;margin:0 auto;padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 60px)}
 
-  .month-bar{max-width:640px;margin:14px auto 0;padding:0 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
-  .month-bar button{background:var(--card);border:1.5px solid var(--line);border-radius:10px;width:42px;height:42px;font-size:1.2rem;cursor:pointer;color:var(--teal-dark)}
-  .month-bar button:disabled{opacity:.35;cursor:default}
-  .month-title{font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:800;font-size:1.2rem;color:var(--teal-dark);text-align:center;flex:1}
-  .month-title small{display:block;font-family:'IBM Plex Sans Arabic',sans-serif;font-weight:400;font-size:.72rem;color:var(--muted)}
+  /* ── شريط تنبيه رفيع ── */
+  .thin-banner{
+    display:none;
+    background:var(--accent-soft);
+    border:1px solid var(--accent);
+    color:var(--accent);
+    border-radius:10px;
+    padding:10px 14px;
+    font-size:.85rem;
+    margin:12px 0 0;
+    text-align:center;
+  }
+  .thin-banner.show{display:block}
+  .thin-banner button{
+    background:var(--accent);color:#fff;border:none;border-radius:7px;
+    padding:6px 14px;font:inherit;font-weight:600;cursor:pointer;margin-inline-start:8px;
+  }
+  .thin-banner.gray{background:#F5F4EF;border-color:var(--line-dark);color:var(--muted)}
+  .thin-banner.gray button{background:var(--ink)}
 
-  main{max-width:640px;margin:0 auto;padding:14px 16px calc(env(safe-area-inset-bottom,0px) + 90px)}
+  /* ── الإجمالي الكامل ── */
+  .grand{
+    background:var(--ink);
+    color:#fff;
+    border-radius:12px;
+    padding:14px 18px;
+    margin:14px 0 6px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .grand .lbl{font-size:.85rem;opacity:.75}
+  .grand .val{font-size:1.3rem;font-weight:700;font-variant-numeric:tabular-nums}
+  .grand .val small{font-size:.75rem;font-weight:400;opacity:.7}
 
-  .add-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:14px;
-    display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;box-shadow:0 1px 3px rgba(34,48,44,.06)}
-  .add-box input[type=text]{flex:1 1 150px;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:.95rem}
-  .add-box select{flex:0 0 auto;border:1.5px solid var(--line);border-radius:10px;padding:10px;font:inherit;font-size:.9rem;background:#fff}
-  .add-box input:focus,.add-box select:focus{outline:2px solid var(--mustard);outline-offset:1px;border-color:var(--mustard)}
-  .btn-add{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:10px 20px;
-    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:700;font-size:1rem;cursor:pointer}
-  .btn-add:hover{background:var(--teal-dark)}
+  /* ── قائمة/فاتورة ── */
+  .receipt{
+    background:var(--paper);
+    border-radius:12px 12px 0 0;
+    margin-top:18px;
+    box-shadow:0 1px 4px rgba(26,26,26,.06);
+    position:relative;
+    padding-bottom:8px;
+  }
+  /* حافة مقصوصة أسفل الفاتورة */
+  .receipt::after{
+    content:'';
+    display:block;
+    height:10px;
+    background:
+      linear-gradient(-45deg, transparent 7px, var(--paper) 0) 0 0 / 14px 100%,
+      linear-gradient(45deg, transparent 7px, var(--paper) 0) 7px 0 / 14px 100%;
+    background-repeat:repeat-x;
+    position:absolute;
+    bottom:-10px;left:0;right:0;
+  }
+  .receipt-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:13px 16px 9px;
+    border-bottom:2px solid var(--ink);
+  }
+  .receipt-head h2{font-size:.95rem;font-weight:700}
+  .receipt-head .due-note{font-size:.7rem;color:var(--accent);font-weight:600}
 
-  .section-title{font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:800;font-size:1.1rem;margin:22px 0 10px;
-    display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;color:#fff}
-  .st-due{background:var(--brick)}
-  .st-weekly{background:var(--c-weekly)}
-  .st-biweekly{background:var(--c-biweekly);color:var(--teal-dark)}
-  .st-monthly{background:var(--c-monthly)}
-  .st-log{background:var(--teal-dark)}
-  .section-title .count{margin-inline-start:auto;background:rgba(255,255,255,.25);border-radius:999px;padding:1px 10px;font-size:.85rem}
+  .row{
+    display:flex;align-items:center;gap:10px;
+    padding:11px 16px;
+    border-bottom:1px solid var(--line);
+    min-height:46px;
+  }
+  .row:last-of-type{border-bottom:none}
+  .chk{
+    flex:none;width:20px;height:20px;border-radius:50%;
+    border:1.5px solid var(--line-dark);
+    background:none;cursor:pointer;font-size:.7rem;color:#fff;line-height:1;
+  }
+  .row.done .chk{background:var(--accent);border-color:var(--accent)}
+  .row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row.done .nm{color:var(--muted);text-decoration:line-through}
+  .row .dot{flex:none;width:7px;height:7px;border-radius:50%;background:var(--accent)}
+  .row .pr{
+    flex:none;font-variant-numeric:tabular-nums;font-weight:600;cursor:pointer;
+    min-width:52px;text-align:left;
+  }
+  .row .pr small{font-weight:400;color:var(--muted);font-size:.7rem}
+  .row .del{
+    flex:none;background:none;border:none;color:var(--line-dark);
+    font-size:.9rem;cursor:pointer;padding:4px;
+  }
+  .row .del:active{color:var(--danger)}
 
-  .items{display:flex;flex-direction:column;gap:10px}
-  .item{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px;
-    display:flex;align-items:center;gap:10px;box-shadow:0 1px 3px rgba(34,48,44,.05);border-inline-start:6px solid var(--line)}
-  .item.f-weekly{border-inline-start-color:var(--c-weekly);background:linear-gradient(to left,#fff 85%,var(--c-weekly-bg))}
-  .item.f-biweekly{border-inline-start-color:var(--c-biweekly);background:linear-gradient(to left,#fff 85%,var(--c-biweekly-bg))}
-  .item.f-monthly{border-inline-start-color:var(--c-monthly);background:linear-gradient(to left,#fff 85%,var(--c-monthly-bg))}
-  .item.due{border:2px solid var(--brick);border-inline-start-width:6px;background:#FDF4F1;animation:pulse 2s infinite}
-  @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(181,68,46,.25)}50%{box-shadow:0 0 0 6px rgba(181,68,46,0)}}
-  .item-info{flex:1;min-width:0}
-  .item-name{font-weight:700;font-size:1rem}
-  .item-meta{font-size:.78rem;color:var(--muted);margin-top:2px}
-  .item.due .item-meta{color:var(--brick);font-weight:600}
-  .freq-tag{display:inline-block;font-size:.68rem;font-weight:700;padding:2px 8px;border-radius:999px;margin-inline-start:6px;vertical-align:middle}
-  .t-weekly{background:var(--c-weekly);color:#fff}
-  .t-biweekly{background:var(--c-biweekly);color:var(--teal-dark)}
-  .t-monthly{background:var(--c-monthly);color:#fff}
+  .add-row{
+    display:flex;align-items:center;gap:8px;
+    padding:9px 16px 11px;
+    border-top:1px dashed var(--line-dark);
+  }
+  .add-row input{
+    border:none;background:none;font:inherit;padding:6px 0;outline:none;
+  }
+  .add-row .in-nm{flex:1;min-width:0}
+  .add-row .in-pr{flex:none;width:64px;text-align:left;font-variant-numeric:tabular-nums}
+  .add-row input::placeholder{color:var(--line-dark)}
+  .add-row .btn-plus{
+    flex:none;background:var(--ink);color:#fff;border:none;border-radius:7px;
+    width:28px;height:28px;font-size:1rem;cursor:pointer;line-height:1;
+  }
 
-  .btn-done{background:var(--mustard);color:var(--teal-dark);border:none;border-radius:10px;padding:9px 15px;
-    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:800;font-size:.92rem;cursor:pointer}
-  .btn-del{background:none;border:none;color:var(--muted);font-size:1.05rem;cursor:pointer;padding:6px;border-radius:8px}
-  .btn-del:hover{color:var(--brick);background:#F3E4E0}
+  .subtotal{
+    display:flex;justify-content:space-between;
+    padding:10px 16px;
+    border-top:2px solid var(--ink);
+    font-weight:700;
+  }
+  .subtotal .v{font-variant-numeric:tabular-nums}
+  .subtotal .v small{font-weight:400;color:var(--muted);font-size:.7rem}
 
-  .log-item{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:9px 14px;
-    display:flex;justify-content:space-between;gap:10px;font-size:.88rem}
-  .log-item .when{color:var(--muted);font-size:.78rem;flex:none}
+  .empty-line{padding:14px 16px;color:var(--line-dark);font-size:.85rem;text-align:center}
 
-  .empty{text-align:center;color:var(--muted);font-size:.9rem;padding:14px;background:#EFE8D6;border-radius:var(--radius)}
-  .loading{text-align:center;color:var(--muted);padding:40px 0}
-  .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 20px);right:50%;transform:translateX(50%);
-    background:var(--teal-dark);color:#fff;padding:10px 22px;border-radius:999px;font-size:.9rem;
-    opacity:0;pointer-events:none;transition:opacity .3s;z-index:10;white-space:nowrap}
+  /* ── فتح شهر جديد ── */
+  .open-month{
+    text-align:center;padding:60px 20px;
+  }
+  .open-month p{color:var(--muted);margin-bottom:16px;font-size:.9rem;line-height:1.8}
+  .open-month button{
+    background:var(--accent);color:#fff;border:none;border-radius:10px;
+    padding:12px 26px;font:inherit;font-weight:700;font-size:1rem;cursor:pointer;
+  }
+
+  /* ── شاشة الدخول ── */
+  .gate{max-width:380px;margin:60px auto;padding:0 20px;text-align:center}
+  .gate h2{margin-bottom:6px}
+  .gate p{color:var(--muted);font-size:.85rem;margin-bottom:20px;line-height:1.8}
+  .gate .card-g{background:var(--paper);border:1px solid var(--line-dark);border-radius:12px;padding:16px;margin-bottom:12px}
+  .gate button{
+    width:100%;background:var(--ink);color:#fff;border:none;border-radius:9px;
+    padding:12px;font:inherit;font-weight:600;font-size:.95rem;cursor:pointer;margin-top:8px;
+  }
+  .gate button.alt{background:var(--accent)}
+  .gate input{
+    width:100%;border:1px solid var(--line-dark);border-radius:9px;padding:11px;
+    font:inherit;text-align:center;
+  }
+
+  dialog{
+    border:none;border-radius:12px;padding:20px;max-width:360px;width:88%;
+    font-family:inherit;
+  }
+  dialog::backdrop{background:rgba(26,26,26,.4)}
+  dialog h3{margin-bottom:8px;font-size:1rem}
+  dialog p{font-size:.82rem;color:var(--muted);line-height:1.7;margin-bottom:6px}
+  .code-box{
+    font-family:monospace;font-size:.9rem;background:var(--bg);border-radius:8px;
+    padding:10px;word-break:break-all;user-select:all;margin:8px 0;
+  }
+  dialog button{
+    background:var(--ink);color:#fff;border:none;border-radius:8px;
+    padding:9px 16px;font:inherit;font-weight:600;cursor:pointer;margin-top:6px;margin-inline-end:6px;
+  }
+  dialog button.plain{background:var(--bg);color:var(--ink)}
+  dialog button.danger{background:var(--danger)}
+
+  .toast{
+    position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 18px);
+    right:50%;transform:translateX(50%);
+    background:var(--ink);color:#fff;padding:9px 20px;border-radius:999px;
+    font-size:.85rem;opacity:0;pointer-events:none;transition:opacity .25s;z-index:10;
+    white-space:nowrap;
+  }
   .toast.show{opacity:1}
-
-  /* شاشة الدخول / الإعدادات */
-  .gate{max-width:420px;margin:40px auto;padding:0 20px;text-align:center}
-  .gate h2{font-family:'Baloo Bhaijaan 2',sans-serif;color:var(--teal-dark);margin-bottom:8px}
-  .gate p{color:var(--muted);font-size:.9rem;margin-bottom:18px;line-height:1.7}
-  .gate .card-g{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:14px}
-  .gate button{width:100%;background:var(--teal);color:#fff;border:none;border-radius:10px;padding:12px;
-    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:700;font-size:1rem;cursor:pointer;margin-top:8px}
-  .gate button.alt{background:var(--mustard);color:var(--teal-dark)}
-  .gate input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px;font:inherit;text-align:center;letter-spacing:1px}
-  .code-box{font-family:monospace;font-size:1rem;background:#EFE8D6;border-radius:10px;padding:10px;
-    word-break:break-all;user-select:all;margin:8px 0}
-  dialog{border:none;border-radius:var(--radius);padding:22px;max-width:380px;width:90%;font-family:inherit}
-  dialog::backdrop{background:rgba(14,66,59,.5)}
-  dialog h3{font-family:'Baloo Bhaijaan 2',sans-serif;color:var(--teal-dark);margin-bottom:10px}
-  dialog p{font-size:.85rem;color:var(--muted);line-height:1.7;margin-bottom:8px}
-  dialog button{background:var(--teal);color:#fff;border:none;border-radius:10px;padding:10px 18px;
-    font-family:'Baloo Bhaijaan 2',sans-serif;font-weight:700;cursor:pointer;margin-top:8px}
-  dialog button.danger{background:var(--brick)}
-  dialog button.plain{background:#EFE8D6;color:var(--ink)}
-  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  .loading{text-align:center;color:var(--muted);padding:50px 0;font-size:.9rem}
 </style>
 </head>
 <body>
 
 <header>
-  <h1>مذكّرة البيت 🏠</h1>
-  <p>احتياجاتنا المشتركة — لا شيء ينتسي</p>
-  <button class="btn-settings" id="btnSettings" aria-label="الإعدادات" style="display:none">⚙</button>
-  <div class="due-pill" id="duePill" style="display:none">…</div>
+  <h1>فاتورة <span>٢٧٥</span></h1>
+  <button class="btn-icon" id="btnSettings" style="display:none">⚙</button>
 </header>
-<svg class="najdi-band" viewBox="0 0 400 16" preserveAspectRatio="none" aria-hidden="true">
-  <rect width="400" height="16" fill="#0E423B"/><g id="triBand"></g>
-</svg>
-
-<div class="alert-banner" id="alertBanner"></div>
-<div class="notif-bar" id="notifBar">🔔 عشان توصلك التنبيهات على الجوال
-  <button id="btnEnableNotif">فعّل الإشعارات</button>
-</div>
-
-<!-- شاشة الربط الأولى -->
-<div class="gate" id="gate" style="display:none">
-  <h2>أهلاً بكم 👋</h2>
-  <p>هذي مذكّرة مشتركة بينك وبين زوجتك.<br>أول شخص منكم يسوي «بيت جديد»، والثاني يدخل برمز البيت نفسه.</p>
-  <div class="card-g">
-    <button id="btnNewHouse">🏠 إنشاء بيت جديد</button>
-  </div>
-  <div class="card-g">
-    <input type="text" id="joinCode" placeholder="الصق رمز البيت هنا">
-    <button class="alt" id="btnJoin">الانضمام لبيت موجود</button>
-  </div>
-</div>
 
 <div class="month-bar" id="monthBar" style="display:none">
-  <button id="prevM" aria-label="الشهر السابق">‹</button>
+  <button id="prevM">‹</button>
   <div class="month-title" id="monthTitle"></div>
-  <button id="nextM" aria-label="الشهر التالي">›</button>
+  <button id="nextM">›</button>
 </div>
 
 <main>
-  <div id="addWrap" style="display:none">
-    <div class="add-box" role="group" aria-label="إضافة احتياج جديد">
-      <input type="text" id="newName" placeholder="مثال: وايت موية، رز، حليب…" aria-label="اسم الاحتياج">
-      <select id="newFreq" aria-label="التكرار">
-        <option value="weekly">أسبوعي</option>
-        <option value="biweekly">كل أسبوعين</option>
-        <option value="monthly">شهري</option>
-      </select>
-      <button class="btn-add" id="btnAdd">أضِف</button>
+  <div class="thin-banner gray" id="notifBar">
+    🔔 فعّلوا الإشعارات ليوصلكم التذكير
+    <button id="btnEnableNotif">تفعيل</button>
+  </div>
+  <div class="thin-banner" id="salaryBanner"></div>
+
+  <div class="gate" id="gate" style="display:none">
+    <h2>فاتورة ٢٧٥ 🧾</h2>
+    <p>قائمة مصروفات البيت المشتركة.<br>أول شخص ينشئ البيت، والثاني ينضم بالرمز.</p>
+    <div class="card-g"><button id="btnNewHouse">إنشاء بيت جديد</button></div>
+    <div class="card-g">
+      <input type="text" id="joinCode" placeholder="الصق رمز البيت">
+      <button class="alt" id="btnJoin">انضمام</button>
     </div>
   </div>
+
   <div id="content"><div class="loading">جارٍ التحميل…</div></div>
 </main>
 
 <dialog id="dlgSettings">
   <h3>الإعدادات</h3>
-  <p>رمز بيتكم — أرسله لزوجتك عشان تنضم بنفس القائمة:</p>
+  <p>رمز بيتكم — أرسله لزوجتك:</p>
   <div class="code-box" id="myCode"></div>
-  <button id="btnCopyCode">نسخ الرمز</button>
+  <button id="btnCopyCode">نسخ</button>
   <button class="plain" id="btnCloseSettings">إغلاق</button>
-  <hr style="margin:14px 0;border:none;border-top:1px solid #E3DCC9">
-  <button class="danger" id="btnLeave">الخروج من هذا البيت</button>
+  <hr style="margin:12px 0;border:none;border-top:1px solid #ECEBE4">
+  <button class="danger" id="btnLeave">الخروج من البيت</button>
 </dialog>
 
 <div class="toast" id="toast"></div>
 
-<!-- ═══════════════════════════════════════════════
-     ١) إعدادات Firebase — الصق إعداداتك هنا 👇
-     (من Firebase Console > Project settings > Your apps)
-════════════════════════════════════════════════ -->
+<!-- ═══ إعدادات Firebase ═══ -->
 <script>
 const FIREBASE_CONFIG = {
   apiKey: "AIzaSyAJqa14Usg3x2FuHWMCa3wWjMUO39hdPt4",
@@ -201,7 +286,6 @@ const FIREBASE_CONFIG = {
   messagingSenderId: "840060946723",
   appId: "1:840060946723:web:f8234d7ff6dcbed25a6496"
 };
-/* ٢) مفتاح الإشعارات العام (VAPID Public Key) — جاهز، لا تغيّره إلا إذا ولّدت مفاتيح جديدة */
 const VAPID_PUBLIC_KEY = "BB5cxv-GNGc8S_hnO-HUabCJlIkzC6DHElKIJM8fEpemRjSZY5C8v7f2UBZSe5FBCxk05_zbogOS0xJaPOBIY-s";
 </script>
 
@@ -214,37 +298,38 @@ const app = initializeApp(FIREBASE_CONFIG);
 const db  = getFirestore(app);
 
 const FREQ = {
-  weekly:   {label:'أسبوعي',      days:7,  tag:'t-weekly',   cls:'f-weekly',   st:'st-weekly'},
-  biweekly: {label:'كل أسبوعين', days:14, tag:'t-biweekly', cls:'f-biweekly', st:'st-biweekly'},
-  monthly:  {label:'شهري',        days:30, tag:'t-monthly',  cls:'f-monthly',  st:'st-monthly'},
+  daily:    {label:'اليومي',       days:1},
+  weekly:   {label:'الأسبوعي',     days:7},
+  biweekly: {label:'النصف شهري',  days:15},
+  monthly:  {label:'الشهري',       days:30},
 };
+const ORDER = ['daily','weekly','biweekly','monthly'];
 const MONTHS = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
 
-let data = {items:[], log:[]};
+let data = {months:{}, log:[]};
 let houseId = null;
-const now = new Date();
-let viewY = now.getFullYear(), viewM = now.getMonth();
 let unsub = null;
+const today = new Date();
+const realKey = mkey(today.getFullYear(), today.getMonth());
+let viewKey = realKey;
 
-/* نقشة المثلثات */
-(function(){
-  const colors = ['#D9A421','#B5442E','#F2ECDD'];
-  let g = '';
-  for(let x=0;x<400;x+=20)
-    g += '<path d="M'+x+' 16 L'+(x+10)+' 2 L'+(x+20)+' 16 Z" fill="'+colors[(x/20)%3]+'"/>';
-  document.getElementById('triBand').innerHTML = g;
-})();
+function mkey(y,m){ return y + '-' + String(m+1).padStart(2,'0'); }
+function keyParts(k){ const [y,m]=k.split('-').map(Number); return {y, m:m-1}; }
+function keyLabel(k){ const p=keyParts(k); return MONTHS[p.m]+' '+p.y; }
+function nextKey(k){ const p=keyParts(k); const d=new Date(p.y,p.m+1,1); return mkey(d.getFullYear(),d.getMonth()); }
+function prevKey(k){ const p=keyParts(k); const d=new Date(p.y,p.m-1,1); return mkey(d.getFullYear(),d.getMonth()); }
 
 function toast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2400);
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function store(k,v){ try{ localStorage.setItem(k,v);}catch(e){} }
-function read(k){ try{ return localStorage.getItem(k);}catch(e){ return null; } }
+function store(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+function read(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function fmt(n){ return (Math.round(n*100)/100).toLocaleString('en-US'); }
 
-/* ── الربط بالبيت ── */
+/* ── الربط ── */
 function randomCode(){
   const chars='abcdefghjkmnpqrstuvwxyz23456789';
   let s=''; const a=new Uint8Array(24); crypto.getRandomValues(a);
@@ -254,8 +339,7 @@ function randomCode(){
 async function startApp(){
   houseId = read('houseId');
   if(!houseId){ showGate(); return; }
-  showApp();
-  listen();
+  showApp(); listen();
 }
 function showGate(){
   document.getElementById('gate').style.display='';
@@ -265,226 +349,258 @@ function showApp(){
   document.getElementById('gate').style.display='none';
   document.getElementById('monthBar').style.display='';
   document.getElementById('btnSettings').style.display='';
-  document.getElementById('duePill').style.display='';
   maybeShowNotifBar();
 }
 document.getElementById('btnNewHouse').onclick = async ()=>{
-  houseId = randomCode();
-  store('houseId', houseId);
-  await setDoc(doc(db,'houses',houseId), {items:[],log:[],created:Date.now()});
+  houseId = randomCode(); store('houseId',houseId);
+  await setDoc(doc(db,'houses',houseId), {months:{}, log:[], created:Date.now()});
   showApp(); listen();
-  toast('تم إنشاء بيتكم 🏠 — شارك الرمز من ⚙');
+  toast('تم إنشاء بيتكم — شارك الرمز من ⚙');
 };
 document.getElementById('btnJoin').onclick = async ()=>{
   const code = document.getElementById('joinCode').value.trim();
-  if(code.length < 20){ toast('الرمز غير صحيح'); return; }
+  if(code.length<20){ toast('الرمز غير صحيح'); return; }
   const snap = await getDoc(doc(db,'houses',code));
   if(!snap.exists()){ toast('ما لقينا بيت بهذا الرمز'); return; }
-  houseId = code; store('houseId', houseId);
+  houseId=code; store('houseId',houseId);
   showApp(); listen();
-  toast('انضممت للبيت ✓');
+  toast('انضممت ✓');
 };
 
-/* ── مزامنة لحظية ── */
+/* ── مزامنة ── */
 function listen(){
   if(unsub) unsub();
   unsub = onSnapshot(doc(db,'houses',houseId), snap=>{
     if(snap.exists()){
       const d = snap.data();
-      data = {items: d.items||[], log: d.log||[]};
+      data = {months: d.months||{}, log: d.log||[]};
+      /* ترحيل بيانات النسخة القديمة إن وجدت */
+      if(d.items && d.items.length && !Object.keys(data.months).length){
+        data.months[realKey] = {items: d.items.map(i=>({
+          id:i.id, name:i.name, freq:i.freq==='biweekly'?'biweekly':i.freq,
+          price:0, lastDone:i.lastDone||null
+        }))};
+        save();
+      }
     }
     render();
-  }, err=>{
-    document.getElementById('content').innerHTML =
-      '<div class="empty">تعذّر الاتصال — تأكد من الإنترنت ومن إعدادات Firebase</div>';
-  });
+  }, ()=>{ document.getElementById('content').innerHTML='<div class="loading">تعذّر الاتصال — تأكد من الإنترنت</div>'; });
 }
 async function save(){
-  try{ await setDoc(doc(db,'houses',houseId), {items:data.items, log:data.log}, {merge:true}); }
-  catch(e){ toast('تعذّر الحفظ، جرّب مرة ثانية'); }
+  try{ await setDoc(doc(db,'houses',houseId), {months:data.months, log:data.log}, {merge:true}); }
+  catch(e){ toast('تعذّر الحفظ'); }
 }
 
 /* ── منطق الاستحقاق ── */
-function daysLeft(item){
-  if(!item.lastDone) return -1;
-  return Math.ceil(FREQ[item.freq].days - (Date.now()-item.lastDone)/86400000);
-}
-function isDue(item){ return daysLeft(item) <= 0; }
-function fmtMeta(item){
-  const d = daysLeft(item);
-  if(!item.lastDone) return 'جديد — يحتاج أول مرة';
-  if(d <= 0) return 'حان موعده! ⏰';
-  if(d === 1) return 'باقي يوم واحد';
-  if(d === 2) return 'باقي يومين';
-  return 'باقي '+d+' أيام';
-}
-function isCurrentMonth(){ return viewY===now.getFullYear() && viewM===now.getMonth(); }
-
-function itemHTML(item){
-  const f = FREQ[item.freq];
-  return '<div class="item '+f.cls+(isDue(item)?' due':'')+'">' +
-    '<div class="item-info"><div class="item-name">'+esc(item.name)+
-    '<span class="freq-tag '+f.tag+'">'+f.label+'</span></div>' +
-    '<div class="item-meta">'+fmtMeta(item)+'</div></div>' +
-    '<button class="btn-done" data-done="'+item.id+'">تم ✓</button>' +
-    '<button class="btn-del" data-del="'+item.id+'" aria-label="حذف">✕</button></div>';
+function isDue(item){
+  if(!item.lastDone) return true;
+  return (Date.now()-item.lastDone)/86400000 >= FREQ[item.freq].days;
 }
 
+/* ── فتح شهر جديد (نسخ القائمة من آخر شهر) ── */
+function latestKeyBefore(target){
+  const keys = Object.keys(data.months).filter(k=>k<target).sort();
+  return keys.length ? keys[keys.length-1] : null;
+}
+async function openMonth(key){
+  const src = latestKeyBefore(key) || (Object.keys(data.months).sort().pop());
+  const items = src && data.months[src]
+    ? data.months[src].items.map(i=>({...i, id:'i'+Date.now()+Math.floor(Math.random()*9999)+Math.random().toString(36).slice(2,5), lastDone:null}))
+    : [];
+  data.months[key] = {items};
+  render(); await save();
+  toast('انفتحت فاتورة '+keyLabel(key)+' 🧾');
+}
+
+/* ── العرض ── */
 function render(){
   if(!houseId) return;
+  const isReal = viewKey===realKey;
   document.getElementById('monthTitle').innerHTML =
-    MONTHS[viewM]+' '+viewY+'<small>'+(isCurrentMonth()?'الشهر الحالي':'سجل شهر سابق')+'</small>';
-  document.getElementById('nextM').disabled = isCurrentMonth();
+    keyLabel(viewKey)+'<small>'+(isReal?'الشهر الحالي':(viewKey>realKey?'شهر قادم':'شهر سابق'))+'</small>';
+
+  /* تذكير يوم ٢٧ */
+  const sb = document.getElementById('salaryBanner');
+  const nk = nextKey(realKey);
+  if(today.getDate()>=27 && !data.months[nk]){
+    sb.innerHTML = '💰 يوم ٢٧! جاهزين لفاتورة '+keyLabel(nk)+'؟'+
+      '<button id="btnOpenNext">افتحها</button>';
+    sb.classList.add('show');
+  } else sb.classList.remove('show');
 
   const box = document.getElementById('content');
-  const due = data.items.filter(isDue);
+  const month = data.months[viewKey];
 
-  const pill = document.getElementById('duePill');
-  if(due.length){ pill.textContent = due.length+' مستحق'; pill.classList.remove('ok'); }
-  else{ pill.textContent = 'كله تمام ✓'; pill.classList.add('ok'); }
-
-  const banner = document.getElementById('alertBanner');
-  if(due.length){
-    banner.innerHTML = '🔔 <b>تنبيه:</b> عندكم '+due.length+' من الاحتياجات حان موعدها: '+
-      due.map(i=>'«'+esc(i.name)+'»').join('، ');
-    banner.classList.add('show');
-  } else banner.classList.remove('show');
-
-  document.title = due.length ? '('+due.length+') مذكّرة البيت' : 'مذكّرة البيت';
-  document.getElementById('addWrap').style.display = isCurrentMonth() ? '' : 'none';
-
-  let html = '';
-  if(isCurrentMonth()){
-    if(!data.items.length){
-      html += '<div class="empty">القائمة فاضية — ابدأوا بإضافة أول احتياج فوق ⬆ (جرّب: وايت موية)</div>';
-    }else{
-      if(due.length){
-        html += '<div class="section-title st-due">⏰ يحتاج انتباهكم الآن<span class="count">'+due.length+'</span></div>';
-        html += '<div class="items">'+due.map(itemHTML).join('')+'</div>';
-      }
-      for(const key of ['weekly','biweekly','monthly']){
-        const group = data.items.filter(i=>i.freq===key && !isDue(i));
-        if(!group.length) continue;
-        group.sort((a,b)=>daysLeft(a)-daysLeft(b));
-        html += '<div class="section-title '+FREQ[key].st+'">'+FREQ[key].label+'<span class="count">'+group.length+'</span></div>';
-        html += '<div class="items">'+group.map(itemHTML).join('')+'</div>';
-      }
-    }
+  if(!month){
+    box.innerHTML = '<div class="open-month">'+
+      '<p>فاتورة '+keyLabel(viewKey)+' لسا ما انفتحت.<br>لما تفتحها، تنتقل لها قائمة الشهر السابق كاملة وتقدر تعدّل عليها.</p>'+
+      '<button id="btnOpenMonth">افتح فاتورة '+keyLabel(viewKey)+'</button></div>';
+    const b=document.getElementById('btnOpenMonth');
+    if(b) b.onclick=()=>openMonth(viewKey);
+    hookSalary();
+    return;
   }
 
-  const monthLog = data.log.filter(e=>{
-    const d = new Date(e.ts);
-    return d.getFullYear()===viewY && d.getMonth()===viewM;
-  }).sort((a,b)=>b.ts-a.ts);
+  const items = month.items||[];
+  let grand = 0;
+  let html = '';
 
-  html += '<div class="section-title st-log">📋 سجل '+MONTHS[viewM]+'<span class="count">'+monthLog.length+'</span></div>';
-  if(monthLog.length){
-    html += '<div class="items">'+monthLog.map(e=>{
-      const d = new Date(e.ts);
-      return '<div class="log-item"><span>✓ '+esc(e.name)+'</span>'+
-        '<span class="when">'+d.getDate()+' '+MONTHS[d.getMonth()]+'</span></div>';
-    }).join('')+'</div>';
-  }else{
-    html += '<div class="empty">ما فيه شيء مسجّل في هذا الشهر'+(isCurrentMonth()?' بعد':'')+'</div>';
+  /* الإجمالي الكامل */
+  items.forEach(i=>grand += (+i.price||0));
+  html += '<div class="grand"><span class="lbl">إجمالي فاتورة '+keyLabel(viewKey)+'</span>'+
+    '<span class="val">'+fmt(grand)+' <small>ر.س</small></span></div>';
+
+  for(const f of ORDER){
+    const group = items.filter(i=>i.freq===f);
+    const sub = group.reduce((a,i)=>a+(+i.price||0),0);
+    const dueCount = group.filter(isDue).length;
+    html += '<div class="receipt">';
+    html += '<div class="receipt-head"><h2>'+FREQ[f].label+'</h2>'+
+      (dueCount?'<span class="due-note">● '+dueCount+' مستحق</span>':'')+'</div>';
+    if(group.length){
+      for(const it of group){
+        const due = isDue(it);
+        html += '<div class="row'+(due?'':' done')+'">'+
+          '<button class="chk" data-chk="'+it.id+'">'+(due?'':'✓')+'</button>'+
+          '<span class="nm">'+esc(it.name)+'</span>'+
+          (due && it.lastDone!==null ? '<span class="dot" title="مستحق"></span>':'')+
+          '<span class="pr" data-pr="'+it.id+'">'+fmt(+it.price||0)+' <small>ر.س</small></span>'+
+          '<button class="del" data-del="'+it.id+'">✕</button>'+
+          '</div>';
+      }
+    }else{
+      html += '<div class="empty-line">لا يوجد — أضف أول غرض ⬇</div>';
+    }
+    html += '<div class="add-row">'+
+      '<button class="btn-plus" data-add="'+f+'">+</button>'+
+      '<input class="in-nm" data-nm="'+f+'" type="text" placeholder="غرض جديد…">'+
+      '<input class="in-pr" data-prin="'+f+'" type="number" inputmode="decimal" placeholder="0">'+
+      '</div>';
+    html += '<div class="subtotal"><span>إجمالي '+FREQ[f].label+'</span><span class="v">'+fmt(sub)+' <small>ر.س</small></span></div>';
+    html += '</div>';
   }
 
   box.innerHTML = html;
-  box.querySelectorAll('[data-done]').forEach(b=>b.onclick=()=>markDone(b.dataset.done));
+
+  box.querySelectorAll('[data-chk]').forEach(b=>b.onclick=()=>toggleDone(b.dataset.chk));
   box.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>del(b.dataset.del));
+  box.querySelectorAll('[data-pr]').forEach(el=>el.onclick=()=>editPrice(el.dataset.pr));
+  box.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>addItem(b.dataset.add));
+  box.querySelectorAll('[data-nm]').forEach(inp=>{
+    inp.addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(inp.dataset.nm); });
+  });
+  hookSalary();
+}
+function hookSalary(){
+  const b=document.getElementById('btnOpenNext');
+  if(b) b.onclick=()=>{ const nk=nextKey(realKey); openMonth(nk).then(()=>{ viewKey=nk; render(); }); };
 }
 
-async function addItem(){
-  const nameEl = document.getElementById('newName');
-  const name = nameEl.value.trim();
-  if(!name){ nameEl.focus(); return; }
-  data.items.push({id:'i'+Date.now()+Math.floor(Math.random()*999), name,
-    freq:document.getElementById('newFreq').value, lastDone:null});
-  nameEl.value='';
+/* ── عمليات ── */
+function curItems(){ return (data.months[viewKey]||{}).items||[]; }
+
+async function addItem(freq){
+  const nmEl = document.querySelector('[data-nm="'+freq+'"]');
+  const prEl = document.querySelector('[data-prin="'+freq+'"]');
+  const name = nmEl.value.trim();
+  if(!name){ nmEl.focus(); return; }
+  const price = parseFloat(prEl.value)||0;
+  curItems().push({id:'i'+Date.now()+Math.floor(Math.random()*999), name, freq, price, lastDone:null});
   render(); await save();
-  toast('انضاف «'+name+'» للقائمة');
 }
-async function markDone(id){
-  const it = data.items.find(i=>i.id===id);
+
+async function toggleDone(id){
+  const it = curItems().find(i=>i.id===id);
   if(!it) return;
-  it.lastDone = Date.now();
-  data.log.push({itemId:id, name:it.name, ts:Date.now()});
+  if(isDue(it)){
+    it.lastDone = Date.now();
+    data.log.push({name:it.name, price:+it.price||0, ts:Date.now()});
+    toast('تم ✓ — التذكير الجاي بعد '+FREQ[it.freq].days+(FREQ[it.freq].days===1?' يوم':' يوم'));
+  }else{
+    it.lastDone = null;
+    toast('رجع مستحقاً');
+  }
   render(); await save();
-  toast('تم ✓ — التذكير الجاي بعد '+FREQ[it.freq].days+' يوم');
 }
+
 async function del(id){
-  const it = data.items.find(i=>i.id===id);
+  const it = curItems().find(i=>i.id===id);
   if(!it) return;
-  if(!confirm('حذف «'+it.name+'» نهائياً من القائمة؟')) return;
-  data.items = data.items.filter(i=>i.id!==id);
+  if(!confirm('حذف «'+it.name+'» من فاتورة '+keyLabel(viewKey)+'؟')) return;
+  data.months[viewKey].items = curItems().filter(i=>i.id!==id);
   render(); await save();
 }
 
-document.getElementById('btnAdd').onclick = addItem;
-document.getElementById('newName').addEventListener('keydown',e=>{ if(e.key==='Enter') addItem(); });
-document.getElementById('prevM').onclick = ()=>{ viewM--; if(viewM<0){viewM=11;viewY--;} render(); };
-document.getElementById('nextM').onclick = ()=>{ if(isCurrentMonth())return; viewM++; if(viewM>11){viewM=0;viewY++;} render(); };
+async function editPrice(id){
+  const it = curItems().find(i=>i.id===id);
+  if(!it) return;
+  const v = prompt('سعر «'+it.name+'» بالريال:', it.price||0);
+  if(v===null) return;
+  it.price = parseFloat(v)||0;
+  render(); await save();
+}
+
+/* ── تنقل الشهور ── */
+document.getElementById('prevM').onclick=()=>{ viewKey=prevKey(viewKey); render(); };
+document.getElementById('nextM').onclick=()=>{ viewKey=nextKey(viewKey); render(); };
 
 /* ── الإعدادات ── */
-const dlg = document.getElementById('dlgSettings');
-document.getElementById('btnSettings').onclick = ()=>{
-  document.getElementById('myCode').textContent = houseId;
+const dlg=document.getElementById('dlgSettings');
+document.getElementById('btnSettings').onclick=()=>{
+  document.getElementById('myCode').textContent=houseId;
   dlg.showModal();
 };
-document.getElementById('btnCloseSettings').onclick = ()=>dlg.close();
-document.getElementById('btnCopyCode').onclick = async ()=>{
-  try{ await navigator.clipboard.writeText(houseId); toast('انتسخ الرمز ✓'); }
+document.getElementById('btnCloseSettings').onclick=()=>dlg.close();
+document.getElementById('btnCopyCode').onclick=async()=>{
+  try{ await navigator.clipboard.writeText(houseId); toast('انتسخ ✓'); }
   catch(e){ toast('انسخه يدوياً بالضغط المطوّل'); }
 };
-document.getElementById('btnLeave').onclick = ()=>{
-  if(!confirm('الخروج من هذا البيت؟ (البيانات تبقى محفوظة، وتقدر ترجع بالرمز)')) return;
-  store('houseId',''); localStorage.removeItem('houseId');
+document.getElementById('btnLeave').onclick=()=>{
+  if(!confirm('الخروج من البيت؟ (البيانات محفوظة وترجع بالرمز)')) return;
+  localStorage.removeItem('houseId');
   location.reload();
 };
 
-/* ── الإشعارات (Web Push) ── */
-function urlB64ToUint8(base64String){
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/-/g,'+').replace(/_/g,'/');
-  const raw = atob(base64);
-  return Uint8Array.from([...raw].map(c=>c.charCodeAt(0)));
+/* ── الإشعارات ── */
+function urlB64ToUint8(b){
+  const p='='.repeat((4-b.length%4)%4);
+  const s=(b+p).replace(/-/g,'+').replace(/_/g,'/');
+  const r=atob(s);
+  return Uint8Array.from([...r].map(c=>c.charCodeAt(0)));
 }
 function isStandalone(){
-  return window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+  return window.matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
 }
-async function maybeShowNotifBar(){
-  const bar = document.getElementById('notifBar');
-  if(!('serviceWorker' in navigator) || !('PushManager' in window)) return;
+function maybeShowNotifBar(){
+  const bar=document.getElementById('notifBar');
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)) return;
   if(read('pushDone')==='1') return;
   if(!isStandalone()){
-    bar.innerHTML = '📲 عشان توصلك التنبيهات على الآيفون: افتح الموقع في سفاري ← زر المشاركة ← «إضافة إلى الشاشة الرئيسية» ← ثم افتح التطبيق من الأيقونة';
+    bar.innerHTML='📲 للإشعارات: افتح في سفاري ← مشاركة ← «إضافة إلى الشاشة الرئيسية» ← وافتح من الأيقونة';
     bar.classList.add('show');
     return;
   }
   bar.classList.add('show');
 }
-document.getElementById('btnEnableNotif').onclick = async ()=>{
+document.getElementById('btnEnableNotif').onclick=async()=>{
   try{
-    const reg = await navigator.serviceWorker.ready;
-    const perm = await Notification.requestPermission();
-    if(perm !== 'granted'){ toast('لازم تسمح بالإشعارات من الإعدادات'); return; }
-    const sub = await reg.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlB64ToUint8(VAPID_PUBLIC_KEY)
+    const reg=await navigator.serviceWorker.ready;
+    const perm=await Notification.requestPermission();
+    if(perm!=='granted'){ toast('لازم تسمح بالإشعارات'); return; }
+    const sub=await reg.pushManager.subscribe({
+      userVisibleOnly:true,
+      applicationServerKey:urlB64ToUint8(VAPID_PUBLIC_KEY)
     });
     await addDoc(collection(db,'houses',houseId,'subs'), JSON.parse(JSON.stringify(sub)));
     store('pushDone','1');
     document.getElementById('notifBar').classList.remove('show');
-    toast('تم تفعيل الإشعارات ✓ بيجيكم تذكير يومي بالمستحق');
+    toast('تفعّلت الإشعارات ✓');
   }catch(e){
-    console.error(e);
-    toast('تعذّر التفعيل — تأكد أنك فاتح التطبيق من أيقونة الشاشة الرئيسية');
+    toast('افتح التطبيق من أيقونة الشاشة الرئيسية أولاً');
   }
 };
 
-/* تسجيل service worker */
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('./sw.js');
-}
+if('serviceWorker' in navigator){ navigator.serviceWorker.register('./sw.js'); }
 
 startApp();
 </script>
