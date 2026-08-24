@@ -271,6 +271,9 @@
   <button id="btnCopyCode">نسخ</button>
   <button class="plain" id="btnCloseSettings">إغلاق</button>
   <hr style="margin:12px 0;border:none;border-top:1px solid #ECEBE4">
+  <p>تعبئة فاتورة الشهر المعروض بقائمة تسوق سعودية جاهزة (بالبراندات والأسعار التقريبية) — تنضاف فوق الموجود وتعدّل عليها براحتك:</p>
+  <button id="btnSeed" style="background:#2E7D5B">🛒 إضافة القائمة الجاهزة</button>
+  <hr style="margin:12px 0;border:none;border-top:1px solid #ECEBE4">
   <button class="danger" id="btnLeave">الخروج من البيت</button>
 </dialog>
 
@@ -559,6 +562,65 @@ document.getElementById('btnLeave').onclick=()=>{
   if(!confirm('الخروج من البيت؟ (البيانات محفوظة وترجع بالرمز)')) return;
   localStorage.removeItem('houseId');
   location.reload();
+};
+
+/* ── قائمة أم البيت الجاهزة 🛒 (أسعار تقريبية بالريال، عدّلوها على سوقكم) ── */
+const SEED = {
+  daily: [
+    ['خبز صمون/توست لوزين', 6],
+    ['حليب المراعي طازج ٢ لتر', 10],
+    ['خضار اليوم (طماطم، خيار، ورقيات)', 15],
+  ],
+  weekly: [
+    ['دجاج الوطنية طازج (٢ حبة)', 32],
+    ['بيض الوطنية ٣٠ حبة', 18],
+    ['فواكه الأسبوع (موز، تفاح، برتقال)', 40],
+    ['زبادي المراعي (٦ حبات)', 12],
+    ['جبن كيري / أبو الولد', 14],
+    ['خبز بر / رقاق', 8],
+    ['مناديل فاين (٤ علب)', 20],
+    ['عصير الربيع (كرتون)', 15],
+  ],
+  biweekly: [
+    ['لحم غنم/عجل مفروم وقطع', 90],
+    ['سمك/روبيان', 60],
+    ['قهوة عربية بن الخير + هيل', 35],
+    ['شاهي ليبتون / ربيع', 15],
+    ['فيري صابون مواعين', 12],
+    ['وايت موية 🚛', 150],
+  ],
+  monthly: [
+    ['رز أبو كاس بشاور ١٠ كجم', 75],
+    ['زيت عافية ٢.٩ لتر', 33],
+    ['سكر الأسرة ٥ كجم', 22],
+    ['دقيق الأولى ٥ كجم', 18],
+    ['معجون طماطم الصافي (كرتون صغير)', 20],
+    ['مكرونة قودي (٥ أكياس)', 15],
+    ['تونة قودي (٦ علب)', 30],
+    ['ماء بيرين/نوفا (كرتونين)', 24],
+    ['بهارات ومطيبات (كمون، فلفل، كركم)', 25],
+    ['تايد ٦ كجم', 45],
+    ['كلوركس + ديتول', 25],
+    ['شامبو + صابون لوكس', 30],
+    ['معجون سيجنال + فراشي', 15],
+    ['أكياس نفايات + قصدير وسفرة', 25],
+  ],
+};
+document.getElementById('btnSeed').onclick=async()=>{
+  if(!data.months[viewKey]){ toast('افتح فاتورة الشهر أولاً'); return; }
+  const count = Object.values(SEED).reduce((a,l)=>a+l.length,0);
+  if(!confirm('إضافة '+count+' غرضاً بأسعار تقريبية لفاتورة '+keyLabel(viewKey)+'؟')) return;
+  for(const [freq, list] of Object.entries(SEED)){
+    for(const [name, price] of list){
+      curItems().push({
+        id:'i'+Date.now()+Math.floor(Math.random()*99999)+Math.random().toString(36).slice(2,5),
+        name, freq, price, lastDone:null
+      });
+    }
+  }
+  dlg.close();
+  render(); await save();
+  toast('انضافت قائمة أم البيت 🛒 — عدّلوا الأسعار على سوقكم');
 };
 
 /* ── الإشعارات ── */
